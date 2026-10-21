@@ -1,0 +1,49 @@
+name: Tests
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: control-sandbox
+    env:
+      MPLBACKEND: Agg
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            control-sandbox/pyproject.toml
+            control-sandbox/dashboard/requirements.txt
+      - name: Install core and dashboard
+        run: python -m pip install -e ".[dev]" -r dashboard/requirements.txt
+      - name: Run core and dashboard tests
+        run: python -m pytest -q -rs
+      - name: Check Streamlit server health
+        run: |
+          python -m streamlit run dashboard/app.py --server.headless=true --server.address=127.0.0.1 > /tmp/streamlit.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:8501/_stcore/health; then
+              exit 0
+            fi
+            kill -0 "$server_pid" || break
+            sleep 1
+          done
+          cat /tmp/streamlit.log
+          exit 1
