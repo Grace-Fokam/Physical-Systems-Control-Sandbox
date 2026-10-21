@@ -1,0 +1,3 @@
+# Install the core project separately (see README.md).
+streamlit>=1.40,<2
+pandas>=2,<3
