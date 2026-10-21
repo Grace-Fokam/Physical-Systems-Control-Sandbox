@@ -12,7 +12,7 @@ python -m streamlit run dashboard/app.py
 Open the local URL printed by Streamlit. Keep the repository checkout: recorded
 CSV data lives in `results/` and is not packaged as wheel data. Paths are resolved
 relative to the app, not the current working directory. No RL extra is needed.
-These instructions deliberately do not change the project's installation or CI configuration.
+GitHub Actions validates installation, the core and dashboard tests, and the Streamlit health endpoint on pull requests and pushes to main. Optional RL tests skip when their extra dependencies are absent.
 
 The recorded tab compares all six benchmark controllers across four scenarios,
 with mean and min–max robustness curves, per-severity metric tables, episode
