@@ -1,9 +1,0 @@
-cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-title: "control-sandbox: controlling physical systems under changing conditions"
-authors:
-  - family-names: Fokam
-    given-names: Grace
-version: 0.1.0
-date-released: 2026-10-20
-license: MIT
