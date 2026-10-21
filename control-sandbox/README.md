@@ -1,6 +1,6 @@
 # control-sandbox
 
-so here's the question: **what happens to a controller when the real world stops matching its model?**
+so the question is: **what happens to a controller when the real world stops matching its model?**
 
 the payload gets heavier. a motor wears out. something breaks mid-flight. a gust hits. this repo
 throws all of that at a bunch of different controllers and watches who copes and who falls over.
